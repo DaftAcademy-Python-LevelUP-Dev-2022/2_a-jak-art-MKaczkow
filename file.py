@@ -1,14 +1,67 @@
+# TASK 1
 def greeter(func):
-    pass
+    def wrapper_function(*args, **kwargs):
+        result = func(*args, **kwargs)
+        result = 'Aloha ' + result.title()
+        return result
+    return wrapper_function
 
 
+# TASK 2
 def sums_of_str_elements_are_equal(func):
-    pass
+    def wrapper_function(*args, **kwargs):
+        first_num, second_num = func(*args, **kwargs).split()
+        first_negative, second_negative = False, False
+
+        if first_num[0] == '-':
+            first_num = first_num[1:]
+            first_negative = True
+        if second_num[0] == '-':
+            second_num = second_num[1:]
+            second_negative = True
+            
+        first_sum = sum(int(digit) for digit in first_num)
+        second_sum = sum(int(digit) for digit in second_num)
+
+        if first_negative:
+            first_sum *= -1
+        if second_negative:
+            second_sum *= -1 
+            
+        if first_sum == second_sum:
+            result = f'{first_sum} == {second_sum}'
+        else:
+            result = f'{first_sum} != {second_sum}'
+        
+        return result 
+    return wrapper_function
 
 
+# TASK 3
 def format_output(*required_keys):
-    pass
+    def true_decorator(func):
+        def wrapper_function(*args, **kwargs):
+            required_keys_list = list(required_keys)
+            result = func(*args, **kwargs)
+
+            for key in required_keys_list:
+                if key not in result:
+                    raise ValueError
+
+            to_delete = []
+            for key in result:
+                if key not in required_keys_list:
+                    to_delete.append(key)
+            
+            for item in to_delete:
+                del result[item]
+
+            # print(result)
+            return result
+        return wrapper_function
+    return true_decorator
 
 
+# TASK 4
 def add_method_to_instance(klass):
     pass
