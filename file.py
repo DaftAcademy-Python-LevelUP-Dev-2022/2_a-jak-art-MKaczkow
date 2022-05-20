@@ -42,21 +42,27 @@ def format_output(*required_keys):
     def true_decorator(func):
         def wrapper_function(*args, **kwargs):
             required_keys_list = list(required_keys)
-            result = func(*args, **kwargs)
+            func_output = func(*args, **kwargs)
+            result = dict.fromkeys(required_keys_list, "")
 
-            for key in required_keys_list:
-                if key not in result:
-                    raise ValueError
-
-            to_delete = []
             for key in result:
-                if key not in required_keys_list:
-                    to_delete.append(key)
+                if '__' in key:
+                    keys_list = key.split(sep='__')
+                    if not all(item in func_output for item in keys_list):
+                        raise ValueError
+                    concat_value = ""
+                    for sub_key in keys_list:
+                        concat_value += f'{func_output[sub_key]} '
+                    result.update({key: concat_value.strip()})
+                elif key not in func_output:
+                    raise ValueError
+                else:
+                    result.update({key: func_output[key]})
             
-            for item in to_delete:
-                del result[item]
+            for key, value in result.items():
+                if value == '':
+                    result.update({key: "Empty value"})
 
-            # print(result)
             return result
         return wrapper_function
     return true_decorator
