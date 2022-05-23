@@ -72,50 +72,13 @@ def format_output(*required_keys):
 from functools import wraps
 
 
-# def add_method_to_instance(klass):
-#     def true_decorator(func):
-#         def wrapper_function(self):
-#             setattr(klass, f'{func}', func)
-#             return klass
-#         return wrapper_function
-#     return true_decorator
-
-# def add_method_to_instance(klass):
-#     def foo(self):
-#         print("Hello World")
-    
-#     setattr(klass, "foo", foo)
-#     return klass
-
-def add_b(cls):
-    def b(self):
-        print('b')
-
-    setattr(cls, 'b', b)
-    return cls
-
 def add_method_to_instance(klass):
     def true_decorator(func):
         @wraps(func)
         def wrapper_function(*args, **kwargs):
-            return func(*args, **kwargs)
+            return func()
         
         setattr(klass, func.__name__, wrapper_function)
+
         return func 
     return true_decorator
-
-def add_method(cls):
-    def decorator(func):
-        @wraps(func)
-        def wrapper(*args, **kwargs):
-            return func(*args, **kwargs)
-
-        setattr(cls, func.__name__, wrapper)
-        return func
-    return decorator
-
-# https://stackoverflow.com/questions/9443725/add-method-to-a-class-dynamically-with-decorator
-# https://block.arch.ethz.ch/blog/2016/07/adding-methods-to-python-classes/
-
-def print_classname(a):
-    print (a.__class__.__name__)
